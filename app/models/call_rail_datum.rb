@@ -1,0 +1,2 @@
+class CallRailDatum < ApplicationRecord
+end
