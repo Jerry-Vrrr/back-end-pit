@@ -2,7 +2,7 @@ module Api
   module V1
     class CallRailDataController < ApplicationController
       def fetch_and_store
-        service = CallRailService.new("53962143e3bd0ab2989770ecbe94a75c", "788957891")
+        service = CallRailService.new("YOUR_API_KEY", params[:company_id])
         response = service.fetch_calls
 
         if response.success?
@@ -23,7 +23,8 @@ module Api
               recording_player: call["recording_player"],
               start_time: call["start_time"],
               tracking_phone_number: call["tracking_phone_number"],
-              voicemail: call["voicemail"]
+              voicemail: call["voicemail"],
+              company_id: params[:company_id]
             )
           end
           render json: { message: "Data fetched and stored successfully" }, status: :ok
@@ -33,10 +34,18 @@ module Api
       end
 
       def index
-        calls = CallRailDatum.all
-        render json: calls
+        if params[:company_id]
+          calls = CallRailDatum.where(company_id: params[:company_id])
+        else
+          calls = CallRailDatum.all
+        end
+
+        enriched_calls = calls.map do |call|
+          call.attributes.merge(company_name: COMPANY_MAPPING[call.company_id])
+        end
+
+        render json: enriched_calls
       end
     end
   end
 end
-
