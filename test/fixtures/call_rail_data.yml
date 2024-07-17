@@ -1,0 +1,37 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  answered: false
+  business_phone_number: MyString
+  customer_city: MyString
+  customer_country: MyString
+  customer_name: MyString
+  customer_phone_number: MyString
+  customer_state: MyString
+  direction: MyString
+  duration: 1
+  call_id: MyString
+  recording: MyString
+  recording_duration: 1
+  recording_player: MyString
+  start_time: 2024-07-11 14:02:09
+  tracking_phone_number: MyString
+  voicemail: false
+
+two:
+  answered: false
+  business_phone_number: MyString
+  customer_city: MyString
+  customer_country: MyString
+  customer_name: MyString
+  customer_phone_number: MyString
+  customer_state: MyString
+  direction: MyString
+  duration: 1
+  call_id: MyString
+  recording: MyString
+  recording_duration: 1
+  recording_player: MyString
+  start_time: 2024-07-11 14:02:09
+  tracking_phone_number: MyString
+  voicemail: false

@@ -1,0 +1,21 @@
+default: &default
+  adapter: postgresql
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  timeout: 5000
+  username: "jerryvohrer@gmail.com"
+  password: "cmr!zJEMS!Xyn6B"
+  host: localhost
+
+development:
+  <<: *default
+  database: my_dashboard_api_development
+
+test:
+  <<: *default
+  database: my_dashboard_api_test
+
+production:
+  <<: *default
+  database: my_dashboard_api_production
+  username: "jerryvohrer@gmail.com"
+  password: <%= ENV['MY_DASHBOARD_API_DATABASE_PASSWORD'] %>
