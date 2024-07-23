@@ -8,6 +8,7 @@ gem "rails", "~> 7.1.3", ">= 7.1.3.2"
 # Use sqlite3 as the database for Active Record
 gem "pg"
 gem 'dotenv-rails', groups: [:development, :test]
+gem 'whenever', require: false
 
 # Use the Puma web server [https://github.com/puma/puma]
 gem "puma", ">= 5.0"

@@ -12,8 +12,10 @@ namespace :call_rail do
         Rails.logger.info "Successful response for #{company_name}: #{response.body}"
 
         response.parsed_response["calls"].each do |call|
-          Rails.logger.info "Saving call with ID: #{call['id']} for Company ID: #{company_id}"
-          call_rail_datum = CallRailDatum.new(
+          Rails.logger.info "Processing call with ID: #{call['id']} for Company ID: #{company_id}"
+          call_rail_datum = CallRailDatum.find_or_initialize_by(call_id: call["id"])
+
+          call_rail_datum.assign_attributes(
             answered: call["answered"],
             business_phone_number: call["business_phone_number"],
             customer_city: call["customer_city"],
@@ -23,7 +25,6 @@ namespace :call_rail do
             customer_state: call["customer_state"],
             direction: call["direction"],
             duration: call["duration"],
-            call_id: call["id"],
             recording: call["recording"],
             recording_duration: call["recording_duration"],
             recording_player: call["recording_player"],
