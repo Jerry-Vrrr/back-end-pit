@@ -1,0 +1,2 @@
+class GravityFormEntry < ApplicationRecord
+end
