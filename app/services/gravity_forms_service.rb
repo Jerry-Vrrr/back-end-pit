@@ -1,21 +1,21 @@
 class GravityFormsService
   COMPANY_MAPPING = {
-    "Apricot" => 475663645,
-    "Brock" => 432770919,
-    "Brown Chiari" => 754688700,
-    "Conger" => 707808192,
-    "CPJ" => 196651924,
-    "Crowell" => 408997789,
-    "Greenstein" => 788957891,
-    "Greenberg" => 435195417,
-    "KLAW" => 294642214,
-    "Kohan Bablove" => 533921350,
-    "Lewis" => 316384868,
-    "Lopez Humphries" => 612344072,
-    "Mahoney" => 595022144,
-    "Money" => 258732157,
-    "Rozas" => 427975086,
-    "Trust" => 847306783
+    "apricot" => 475663645,
+    "brock" => 432770919,
+    "brown_chiari" => 754688700,
+    "conger" => 707808192,
+    "cpj" => 196651924,
+    "crowell" => 408997789,
+    "greenstein" => 788957891,
+    "greenberg" => 435195417,
+    "klaw" => 294642214,
+    "kohan_bablove" => 533921350,
+    "lewis" => 316384868,
+    "lopez_humphries" => 612344072,
+    "mahoney" => 595022144,
+    "money" => 258732157,
+    "rozas" => 427975086,
+    "trust" => 847306783
   }
 
   COMPANY_CREDENTIALS = {
@@ -76,51 +76,79 @@ class GravityFormsService
     }
   }
 
+  FIELD_MAPPINGS = {
+    'lopez_humphries' => {
+      name: ->(entry) { "#{entry['2']} #{entry['21']}" },
+      phone: '16',
+      email: '21',
+      message: '20'
+    },
+    'lewis' => {
+      name: '1',
+      phone: '6',
+      email: '2',
+      message: '5'
+    },
+    'default' => {
+      name: ->(entry) { "#{entry['2']} #{entry['21']}" },
+      phone: '16',
+      email: '17',
+      message: '20'
+    }
+  }
+
   def initialize(company_name)
-    company_key = company_name.downcase.tr(" ", "_") # Convert to lowercase and replace spaces with underscores
-    @credentials = COMPANY_CREDENTIALS[company_key]
-    @company_id = COMPANY_MAPPING[company_name]
+    @company_name = company_name
+    @company_key = company_name.downcase.tr(" ", "_") # Convert to lowercase and replace spaces with underscores
+    @credentials = COMPANY_CREDENTIALS[@company_key]
+    @company_id = COMPANY_MAPPING[@company_key]
+    Rails.logger.info("Initializing GravityFormsService for Company ID: #{@company_id}, Company Key: #{@company_key}")
   end
 
   def fetch_entries
     return [] unless @credentials
-
+  
     auth = { username: @credentials[:username], password: @credentials[:password] }
     fetch_url = @credentials[:url]
     Rails.logger.info("Fetching Gravity Forms data from URL: #{fetch_url}, Company ID: #{@company_id}")
-
+  
     response = HTTParty.get(fetch_url, basic_auth: auth)
-
+  
     if response.success?
       begin
         Rails.logger.info("Gravity Forms API Response: #{response.body}")
         parsed_response = JSON.parse(response.body)
         entries = parsed_response['entries']
-
+  
+        mapping = FIELD_MAPPINGS[@company_key] || FIELD_MAPPINGS['default']
+  
         entries.map do |entry|
+          message = entry[mapping[:message]]
+          next if message.nil? || message.strip.empty?
+  
           Rails.logger.info("Processing entry: #{entry.inspect}")
           {
             id: entry['id'],
             form_id: entry['form_id'],
             date_created: entry['date_created'],
-            name: "#{entry['2']} #{entry['21']}",
-            phone: entry['16'],
-            email: entry['17'],
-            message: entry['20'],
+            name: mapping[:name].is_a?(Proc) ? mapping[:name].call(entry) : entry[mapping[:name]],
+            phone: entry[mapping[:phone]],
+            email: entry[mapping[:email]],
+            message: message,
             source_url: entry['source_url'],
             company_id: @company_id
           }
-        end
+        end.compact
       rescue JSON::ParserError => e
-        Rails.logger.error("Failed to parse JSON response: #{e.message}")
+        Rails.logger.error("Failed to parse JSON response for company #{@company_name}: #{e.message}")
         []
       rescue TypeError => e
-        Rails.logger.error("TypeError encountered: #{e.message}")
+        Rails.logger.error("TypeError encountered for company #{@company_name}: #{e.message}")
         []
       end
     else
-      Rails.logger.error("Failed to fetch entries: #{response.body}")
+      Rails.logger.error("Failed to fetch entries for company #{@company_name}: #{response.body}")
       []
     end
-  end
+  end  
 end
