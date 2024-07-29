@@ -89,6 +89,54 @@ class GravityFormsService
       email: '2',
       message: '5'
     },
+    'apricot' => {
+      name: ->(entry) { "#{entry['1']} #{entry['9']}" },
+      phone: '7',
+      email: '2',
+      message: '5'
+    },
+    'conger' => {
+      name: ->(entry) { "#{entry['1']} #{entry['2']}" },
+      phone: '3',
+      email: '4',
+      message: '7'
+    },
+    'brock' => {
+      name: '1',
+      phone: '2',
+      email: '3',
+      message: '4'
+    },
+    'brown_chiari' => {
+      name: '1',
+      phone: '4',
+      email: '7',
+      message: '6'
+    },
+    'dkb' => {
+      name: '1',
+      phone: '3',
+      email: '2',
+      message: '5'
+    },
+    'mahoney' => {
+      name: ->(entry) { "#{entry['1']} #{entry['2']}" },
+      phone: '4',
+      email: '3',
+      message: '5'
+    },
+    'money' => {
+      name: '1',
+      phone: '4',
+      email: '3',
+      message: '5'
+    },
+    'rozas' => {
+      name: ->(entry) { "#{entry['1']} #{entry['2']}" },
+      phone: '3',
+      email: '4',
+      message: '7'
+    },
     'default' => {
       name: ->(entry) { "#{entry['2']} #{entry['21']}" },
       phone: '16',
