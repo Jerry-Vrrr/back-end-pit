@@ -39,6 +39,11 @@ class GravityFormsService
       username: ENV['BROCK_USERNAME'],
       password: ENV['BROCK_PASSWORD']
     },
+    'cpj' => {
+      url: "#{ENV['CPJ_URL']}/wp-json/gf/v2/entries",
+      username: ENV['CPJ_USERNAME'],
+      password: ENV['CPJ_PASSWORD']
+    },
     'brown_chiari' => {
       url: "#{ENV['BROWN_CHIARI_URL']}/wp-json/gf/v2/entries",
       username: ENV['BROWN_CHIARI_USERNAME'],
@@ -130,6 +135,12 @@ class GravityFormsService
       phone: '4',
       email: '3',
       message: '5'
+    },
+    'cpj' => {
+      name: '4',
+      phone: '7',
+      email: '3',
+      message: '6'
     },
     'rozas' => {
       name: ->(entry) { "#{entry['1']} #{entry['2']}" },
