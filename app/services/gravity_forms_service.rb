@@ -9,7 +9,7 @@ class GravityFormsService
     "greenstein" => 788957891,
     "greenberg" => 435195417,
     "klaw" => 294642214,
-    "kohan_bablove" => 533921350,
+    "dkb" => 533921350,
     "lewis" => 316384868,
     "lopez_humphries" => 612344072,
     "mahoney" => 595022144,
@@ -83,10 +83,10 @@ class GravityFormsService
 
   FIELD_MAPPINGS = {
     'lopez_humphries' => {
-      name: ->(entry) { "#{entry['2']} #{entry['21']}" },
-      phone: '16',
-      email: '21',
-      message: '20'
+      name: '1',
+      phone: '4',
+      email: '3',
+      message: '6'
     },
     'lewis' => {
       name: '1',
@@ -95,10 +95,10 @@ class GravityFormsService
       message: '5'
     },
     'apricot' => {
-      name: ->(entry) { "#{entry['1']} #{entry['9']}" },
+      name: '1',
       phone: '7',
       email: '2',
-      message: '5'
+      message: '4'
     },
     'conger' => {
       name: ->(entry) { "#{entry['1']} #{entry['2']}" },
@@ -132,9 +132,9 @@ class GravityFormsService
     },
     'money' => {
       name: '1',
-      phone: '4',
-      email: '3',
-      message: '5'
+      phone: '6',
+      email: '5',
+      message: '10'
     },
     'cpj' => {
       name: '4',
@@ -186,6 +186,11 @@ class GravityFormsService
           next if message.nil? || message.strip.empty?
   
           Rails.logger.info("Processing entry: #{entry.inspect}")
+  
+          # Check for existing entry by comparing entry_id or other unique fields
+          existing_entry = GravityFormEntry.find_by(message: message, company_id: @company_id)
+          next if existing_entry
+  
           {
             id: entry['id'],
             form_id: entry['form_id'],
@@ -209,5 +214,6 @@ class GravityFormsService
       Rails.logger.error("Failed to fetch entries for company #{@company_name}: #{response.body}")
       []
     end
-  end  
+  end
+   
 end
