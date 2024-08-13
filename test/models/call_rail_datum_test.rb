@@ -1,6 +1,6 @@
 require "test_helper"
 
-class CallRailDatumTest < ActiveSupport::TestCase
+class CallRailDataTest < ActiveSupport::TestCase
   # test "the truth" do
   #   assert true
   # end
