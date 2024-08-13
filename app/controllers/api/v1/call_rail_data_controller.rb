@@ -13,7 +13,7 @@ module Api
             # Assuming response.parsed_response["calls"] contains the call data
             response.parsed_response["calls"].each do |call|
               Rails.logger.info "Saving call with ID: #{call['id']} for Company ID: #{params[:company_id]}"
-              CallRailDatum.create(
+              CallRailData.create(
                 answered: call["answered"],
                 business_phone_number: call["business_phone_number"],
                 customer_city: call["customer_city"],
@@ -34,13 +34,13 @@ module Api
               )
             end
 
-            calls = CallRailDatum.where(company_id: params[:company_id])
+            calls = CallRailData.where(company_id: params[:company_id])
           else
             Rails.logger.error "Error response: #{response.message}"
-            calls = CallRailDatum.none
+            calls = CallRailData.none
           end
         else
-          calls = CallRailDatum.all
+          calls = CallRailData.all
         end
 
         enriched_calls = calls.map do |call|

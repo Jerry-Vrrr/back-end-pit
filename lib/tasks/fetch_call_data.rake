@@ -13,9 +13,9 @@ namespace :call_rail do
 
         response.parsed_response["calls"].each do |call|
           Rails.logger.info "Processing call with ID: #{call['id']} for Company ID: #{company_id}"
-          call_rail_datum = CallRailDatum.find_or_initialize_by(call_id: call["id"])
+          call_rail_data = CallRailData.find_or_initialize_by(call_id: call["id"])
 
-          call_rail_datum.assign_attributes(
+          call_rail_data.assign_attributes(
             answered: call["answered"],
             business_phone_number: call["business_phone_number"],
             customer_city: call["customer_city"],
@@ -34,10 +34,10 @@ namespace :call_rail do
             company_id: company_id,
           )
 
-          if call_rail_datum.save
+          if call_rail_data.save
             Rails.logger.info "Call with ID: #{call['id']} saved successfully for Company ID: #{company_id}"
           else
-            Rails.logger.error "Error saving call with ID: #{call['id']} for Company ID: #{company_id}: #{call_rail_datum.errors.full_messages.join(', ')}"
+            Rails.logger.error "Error saving call with ID: #{call['id']} for Company ID: #{company_id}: #{call_rail_data.errors.full_messages.join(', ')}"
           end
         end
       else
