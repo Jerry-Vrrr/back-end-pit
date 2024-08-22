@@ -5,19 +5,18 @@ class RegistrationsController < ApplicationController
     @user = User.new(user_params)
 
     if @user.save
-      send_email_verification
-      render json: @user, status: :created
+      session = @user.sessions.create! # Create a session for the new user
+      response.set_header "X-Session-Token", session.signed_id # Set the session token in the response header
+      render json: { message: "User successfully created", user: @user }, status: :created
     else
-      render json: @user.errors, status: :unprocessable_entity
+      # Return detailed error messages if the user couldn't be created
+      render json: { errors: @user.errors.full_messages }, status: :unprocessable_entity
     end
   end
 
   private
-    def user_params
-      params.permit(:email, :password, :password_confirmation)
-    end
 
-    def send_email_verification
-      UserMailer.with(user: @user).email_verification.deliver_later
-    end
+  def user_params
+    params.require(:user).permit(:email, :password, :password_confirmation)
+  end
 end
