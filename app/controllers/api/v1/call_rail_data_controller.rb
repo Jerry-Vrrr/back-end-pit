@@ -8,35 +8,42 @@ module Api
           response = service.fetch_calls
 
           if response.success?
-            Rails.logger.info "Successful response: #{response.body}"
-            
-            # Assuming response.parsed_response["calls"] contains the call data
+            Rails.logger.info "Successful response for Company ID #{params[:company_id]}"
+
             response.parsed_response["calls"].each do |call|
-              Rails.logger.info "Saving call with ID: #{call['id']} for Company ID: #{params[:company_id]}"
-              CallRailData.create(
-                answered: call["answered"],
-                business_phone_number: call["business_phone_number"],
-                customer_city: call["customer_city"],
-                customer_country: call["customer_country"],
-                customer_name: call["customer_name"],
-                customer_phone_number: call["customer_phone_number"],
-                customer_state: call["customer_state"],
-                direction: call["direction"],
-                duration: call["duration"],
-                call_id: call["id"],
-                recording: call["recording"],
-                recording_duration: call["recording_duration"],
-                recording_player: call["recording_player"],
-                start_time: call["start_time"],
-                tracking_phone_number: call["tracking_phone_number"],
-                voicemail: call["voicemail"],
-                company_id: params[:company_id]
-              )
+              if CallRailData.exists?(call_id: call["id"])
+                Rails.logger.info "Skipping duplicate call with ID: #{call['id']}"
+              else
+                begin
+                  CallRailData.create!(
+                    answered: call["answered"],
+                    business_phone_number: call["business_phone_number"],
+                    customer_city: call["customer_city"],
+                    customer_country: call["customer_country"],
+                    customer_name: call["customer_name"],
+                    customer_phone_number: call["customer_phone_number"],
+                    customer_state: call["customer_state"],
+                    direction: call["direction"],
+                    duration: call["duration"],
+                    call_id: call["id"],
+                    recording: call["recording"],
+                    recording_duration: call["recording_duration"],
+                    recording_player: call["recording_player"],
+                    start_time: call["start_time"],
+                    tracking_phone_number: call["tracking_phone_number"],
+                    voicemail: call["voicemail"],
+                    company_id: params[:company_id]
+                  )
+                  Rails.logger.info "Call with ID: #{call['id']} saved successfully"
+                rescue => e
+                  Rails.logger.error "Failed to save call with ID: #{call['id']} - Error: #{e.message}"
+                end
+              end
             end
 
             calls = CallRailData.where(company_id: params[:company_id])
           else
-            Rails.logger.error "Error response: #{response.message}"
+            Rails.logger.error "Error response from CallRailService: #{response.message}"
             calls = CallRailData.none
           end
         else

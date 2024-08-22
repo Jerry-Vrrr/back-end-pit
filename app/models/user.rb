@@ -1,13 +1,7 @@
 class User < ApplicationRecord
   has_secure_password
 
-  generates_token_for :email_verification, expires_in: 2.days do
-    email
-  end
-  generates_token_for :password_reset, expires_in: 20.minutes do
-    password_salt.last(10)
-  end
-  
+  # Custom authentication method
   def self.authenticate_by(email:, password:)
     user = find_by(email: email)
     user if user&.authenticate(password)
@@ -16,15 +10,14 @@ class User < ApplicationRecord
   has_many :sessions, dependent: :destroy
 
   validates :email, presence: true, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }
-  validates :password, allow_nil: true, length: { minimum: 12 }
+  validates :password, length: { minimum: 12 }, allow_nil: true
 
-  normalizes :email, with: -> { _1.strip.downcase }
+  # Normalizing email before saving
+  before_save :normalize_email
 
-  before_validation if: :email_changed?, on: :update do
-    self.verified = false
-  end
+  private
 
-  after_update if: :password_digest_previously_changed? do
-    sessions.where.not(id: Current.session).delete_all
+  def normalize_email
+    self.email = email.strip.downcase
   end
 end
