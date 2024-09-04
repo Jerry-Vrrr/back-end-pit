@@ -57,6 +57,24 @@ Rails.application.configure do
   # Highlight code that enqueued background job in logs.
   config.active_job.verbose_enqueue_logs = true
 
+  # config/environments/development.rb
+
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = {
+    address:              'smtp.office365.com',
+    port:                 587,
+    domain:               'outlook.com', # Replace 'outlook.com' with your actual domain if applicable
+    user_name:            'wakeywakeyapp@outlook.com', # Your Outlook email
+    password:             'Bilo123!', # Your Outlook email password
+    authentication:       'login', # Use 'login' for Office 365/Outlook
+    enable_starttls_auto: true
+  }
+  
+  
+  
+  config.action_mailer.raise_delivery_errors = true
+
+
 
   # Raises error for missing translations.
   # config.i18n.raise_on_missing_translations = true

@@ -80,6 +80,23 @@ Rails.application.configure do
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
 
+
+  # config/environments/production.rb
+
+config.action_mailer.delivery_method = :smtp
+config.action_mailer.smtp_settings = {
+  address:              'smtp.gmail.com',
+  port:                 587,
+  domain:               'apricotlaw.com', # Correct domain for the email sender
+  user_name:            ENV['EMAIL_USERNAME'], # Environment variable for security
+  password:             ENV['EMAIL_PASSWORD'], # Environment variable for security
+  authentication:       'plain',
+  enable_starttls_auto: true
+}
+
+# Set the host to your production server’s domain
+config.action_mailer.default_url_options = { host: 'www.apricotlaw.com' } # Replace with your production domain
+
   # Enable DNS rebinding protection and other `Host` header attacks.
   # config.hosts = [
   #   "example.com",     # Allow requests from example.com
