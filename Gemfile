@@ -14,6 +14,8 @@ gem 'whenever', require: false
 gem "puma", ">= 5.0"
 gem 'httparty'
 gem 'rack-cors'
+gem 'sidekiq'
+gem 'mail'
 
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 # gem "jbuilder"

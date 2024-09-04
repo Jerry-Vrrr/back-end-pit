@@ -1,21 +1,21 @@
 class GravityFormsService
   COMPANY_MAPPING = {
-    "apricot" => 475663645,
-    "brock" => 432770919,
-    "brown_chiari" => 754688700,
-    "conger" => 707808192,
-    "cpj" => 196651924,
-    "crowell" => 408997789,
-    "greenstein" => 788957891,
-    "greenberg" => 435195417,
-    "klaw" => 294642214,
-    "dkb" => 533921350,
-    "lewis" => 316384868,
-    "lopez_humphries" => 612344072,
-    "mahoney" => 595022144,
-    "money" => 258732157,
-    "rozas" => 427975086,
-    "trust" => 847306783
+    "apricot" => 475663645, #login - Jerry@apricot - 
+    "brock" => 432770919, #login - brocklawsocial@gmail.com	
+    "brown_chiari" => 754688700, #login - BrownChiariLLPlawny@gmail.com' password: ''
+    "conger" => 707808192, #login - 'CongerLawInjuryAttysCA@gmail.com' password: ''
+    "cpj" => 196651924, #login -  ConwayPauleyJohnsonLawNE@gmail.com
+    "crowell" => 408997789, #login - crowelllawofficesca@gmail.com
+    "greenstein" => 788957891, #login - greensteinmilbauersocial@gmail.com	
+    "greenberg" => 435195417, #login - greenberglawsocial@gmail.com'
+    "klaw" => 294642214, #login - KLGlawyerny@gmail.com
+    "dkb" => 533921350, #login - dkblawyerssocial@gmail.com
+    "lewis" => 316384868, #login - CLAssociatesLaw@gmail.com
+    "lopez_humphries" => 612344072, #login - lhpamaster@gmail.com
+    "mahoney" => 595022144, #login - MahoneyMahoneyLaw@gmail.com
+    "money" => 258732157, #login - moneyfirstlendingNV@gmail.com
+    "rozas" => 427975086, #login - RozasLawFirmLLCLA@gmail.com
+    "trust" => 847306783 #login - davidsmithlegal@gmail.com
   }
 
   COMPANY_CREDENTIALS = {
@@ -217,3 +217,9 @@ class GravityFormsService
   end
    
 end
+
+
+
+
+
+#securepassword123
