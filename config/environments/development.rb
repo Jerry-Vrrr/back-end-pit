@@ -65,9 +65,11 @@ Rails.application.configure do
     port:                 587,
     domain:               'outlook.com', # Replace 'outlook.com' with your actual domain if applicable
     user_name:            'wakeywakeyapp@outlook.com', # Your Outlook email
-    password:             'Bilo123!', # Your Outlook email password
+    password:             'Wakeup123', # Your Outlook email password
     authentication:       'login', # Use 'login' for Office 365/Outlook
-    enable_starttls_auto: true
+    enable_starttls_auto: true,
+    open_timeout: 30,
+    read_timeout: 60
   }
   
   

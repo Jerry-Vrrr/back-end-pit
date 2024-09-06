@@ -25,6 +25,12 @@ namespace :gravity_forms do
 
         if form_entry.save
           Rails.logger.info "Entry with ID: #{entry[:id]} for #{company_name} saved successfully"
+
+          # Trigger the mailer when the form entry is saved
+          if company_name == 'apricot' # Change this condition based on your requirements
+            FormNotifierMailer.new_form_submission_email(form_entry).deliver_now
+            Rails.logger.info "Notification email sent for entry ID: #{entry[:id]}"
+          end
         else
           Rails.logger.error "Error saving entry with ID: #{entry[:id]} for #{company_name}: #{form_entry.errors.full_messages.join(', ')}"
         end
