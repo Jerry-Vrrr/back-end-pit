@@ -23,6 +23,8 @@ Rails.application.routes.draw do
       # Call Rail Data routes
       get 'call_rail_data/fetch_and_store', to: 'call_rail_data#fetch_and_store'
       get 'call_rail_data', to: 'call_rail_data#index'
+
     end
   end
+  root to: proc { [200, { 'Content-Type' => 'text/plain' }, ['API is running']] }
 end
