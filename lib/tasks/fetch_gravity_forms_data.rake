@@ -8,7 +8,12 @@ namespace :gravity_forms do
       service = GravityFormsService.new(company_name)
 
       entries = service.fetch_entries
-      Rails.logger.info "Fetched entries for #{company_name}: #{entries.inspect}"
+
+      if entries.empty?
+        Rails.logger.warn "No entries fetched for #{company_name}. This may indicate an issue with credentials or the request."
+      else
+        Rails.logger.info "Fetched #{entries.size} entries for #{company_name}: #{entries.inspect}"
+      end
 
       entries.each do |entry|
         form_entry = GravityFormEntry.new(
@@ -27,7 +32,7 @@ namespace :gravity_forms do
           Rails.logger.info "Entry with ID: #{entry[:id]} for #{company_name} saved successfully"
 
           # Trigger the mailer when the form entry is saved
-          if company_name == 'apricot' # Change this condition based on your requirements
+          if company_name == 'apricot' # Adjust this condition as needed
             FormNotifierMailer.new_form_submission_email(form_entry).deliver_now
             Rails.logger.info "Notification email sent for entry ID: #{entry[:id]}"
           end

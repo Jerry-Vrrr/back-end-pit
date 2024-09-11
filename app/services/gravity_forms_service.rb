@@ -165,47 +165,47 @@ class GravityFormsService
   end
 
   def fetch_entries
-    return [] unless @credentials
-  
+    unless @credentials
+      Rails.logger.error("No credentials found for #{@company_name}. Skipping data fetch.")
+      return []
+    end
+
     auth = { username: @credentials[:username], password: @credentials[:password] }
     fetch_url = @credentials[:url]
-    
+
     # Log before initiating the HTTP request
-    Rails.logger.info("Fetching entries for #{@company_name} using URL: #{fetch_url} with credentials: #{auth.inspect}")
-  
+    Rails.logger.info("Attempting to fetch entries for #{@company_name} using URL: #{fetch_url} with credentials: #{auth.inspect}")
+
     response = HTTParty.get(fetch_url, basic_auth: auth)
-  
+
     # Log the response status code
     Rails.logger.info("Response status for #{@company_name}: #{response.code}")
-  
+
     if response.success?
       begin
-        Rails.logger.info("Gravity Forms API Response: #{response.body}")
+        Rails.logger.info("Gravity Forms API Response for #{@company_name}: #{response.body}")
         parsed_response = JSON.parse(response.body)
         entries = parsed_response['entries']
-  
+
         # Log the field mappings used for the company
         mapping = FIELD_MAPPINGS[@company_key] || FIELD_MAPPINGS['default']
         Rails.logger.info("Field mappings for #{@company_name}: #{mapping.inspect}")
-  
+
         entries.map do |entry|
           message = entry[mapping[:message]]
-          # Log if skipping an entry due to empty or duplicate
           if message.nil? || message.strip.empty?
             Rails.logger.info("Skipping entry for #{@company_name} due to empty message: #{entry.inspect}")
             next
           end
-  
-          # Check for existing entry by comparing entry_id or other unique fields
+
           existing_entry = GravityFormEntry.find_by(message: message, company_id: @company_id)
           if existing_entry
             Rails.logger.info("Skipping duplicate entry for #{@company_name}: #{entry.inspect}")
             next
           end
-  
-          # Log processing each entry
+
           Rails.logger.info("Processing entry: #{entry.inspect}")
-  
+
           {
             id: entry['id'],
             form_id: entry['form_id'],
@@ -226,12 +226,10 @@ class GravityFormsService
         []
       end
     else
-      # Log if fetching entries fails
       Rails.logger.error("Failed to fetch entries for #{@company_name} with status #{response.code}: #{response.body}")
       []
     end
   end
-  
 end
 
 
