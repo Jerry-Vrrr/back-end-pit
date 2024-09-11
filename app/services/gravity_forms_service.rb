@@ -158,7 +158,7 @@ class GravityFormsService
 
   def initialize(company_name)
     @company_name = company_name
-    @company_key = company_name.downcase.tr(" ", "_") # Convert to lowercase and replace spaces with underscores
+    @company_key = company_name.downcase.tr(" ", "_")
     @credentials = COMPANY_CREDENTIALS[@company_key]
     @company_id = COMPANY_MAPPING[@company_key]
     Rails.logger.info("Initializing GravityFormsService for Company ID: #{@company_id}, Company Key: #{@company_key}")
@@ -176,59 +176,79 @@ class GravityFormsService
     # Log before initiating the HTTP request
     Rails.logger.info("Attempting to fetch entries for #{@company_name} using URL: #{fetch_url} with credentials: #{auth.inspect}")
 
-    response = HTTParty.get(fetch_url, basic_auth: auth)
-
-    # Log the response status code
-    Rails.logger.info("Response status for #{@company_name}: #{response.code}")
+    begin
+      response = HTTParty.get(fetch_url, basic_auth: auth)
+      log_response(response)
+    rescue StandardError => e
+      Rails.logger.error("HTTP request failed for #{@company_name}: #{e.message}")
+      return []
+    end
 
     if response.success?
-      begin
-        Rails.logger.info("Gravity Forms API Response for #{@company_name}: #{response.body}")
-        parsed_response = JSON.parse(response.body)
-        entries = parsed_response['entries']
-
-        # Log the field mappings used for the company
-        mapping = FIELD_MAPPINGS[@company_key] || FIELD_MAPPINGS['default']
-        Rails.logger.info("Field mappings for #{@company_name}: #{mapping.inspect}")
-
-        entries.map do |entry|
-          message = entry[mapping[:message]]
-          if message.nil? || message.strip.empty?
-            Rails.logger.info("Skipping entry for #{@company_name} due to empty message: #{entry.inspect}")
-            next
-          end
-
-          existing_entry = GravityFormEntry.find_by(message: message, company_id: @company_id)
-          if existing_entry
-            Rails.logger.info("Skipping duplicate entry for #{@company_name}: #{entry.inspect}")
-            next
-          end
-
-          Rails.logger.info("Processing entry: #{entry.inspect}")
-
-          {
-            id: entry['id'],
-            form_id: entry['form_id'],
-            date_created: entry['date_created'],
-            name: mapping[:name].is_a?(Proc) ? mapping[:name].call(entry) : entry[mapping[:name]],
-            phone: entry[mapping[:phone]],
-            email: entry[mapping[:email]],
-            message: message,
-            source_url: entry['source_url'],
-            company_id: @company_id
-          }
-        end.compact
-      rescue JSON::ParserError => e
-        Rails.logger.error("Failed to parse JSON response for company #{@company_name}: #{e.message}")
-        []
-      rescue TypeError => e
-        Rails.logger.error("TypeError encountered for company #{@company_name}: #{e.message}")
-        []
-      end
+      process_entries(response.body)
     else
       Rails.logger.error("Failed to fetch entries for #{@company_name} with status #{response.code}: #{response.body}")
       []
     end
+  end
+
+  private
+
+  def log_response(response)
+    Rails.logger.info("Response status for #{@company_name}: #{response.code}")
+    if response.body.nil? || response.body.empty?
+      Rails.logger.warn("Empty response body for #{@company_name}")
+    else
+      Rails.logger.info("Received response body for #{@company_name}: #{response.body[0..500]}") # Log the first 500 characters of the response
+    end
+  end
+
+  def process_entries(response_body)
+    begin
+      parsed_response = JSON.parse(response_body)
+      entries = parsed_response['entries']
+
+      mapping = FIELD_MAPPINGS[@company_key] || FIELD_MAPPINGS['default']
+      Rails.logger.info("Field mappings for #{@company_name}: #{mapping.inspect}")
+
+      entries.map do |entry|
+        process_entry(entry, mapping)
+      end.compact
+    rescue JSON::ParserError => e
+      Rails.logger.error("Failed to parse JSON response for company #{@company_name}: #{e.message}")
+      []
+    rescue TypeError => e
+      Rails.logger.error("TypeError encountered for company #{@company_name}: #{e.message}")
+      []
+    end
+  end
+
+  def process_entry(entry, mapping)
+    message = entry[mapping[:message]]
+    if message.nil? || message.strip.empty?
+      Rails.logger.info("Skipping entry for #{@company_name} due to empty message: #{entry.inspect}")
+      return nil
+    end
+
+    existing_entry = GravityFormEntry.find_by(message: message, company_id: @company_id)
+    if existing_entry
+      Rails.logger.info("Skipping duplicate entry for #{@company_name}: #{entry.inspect}")
+      return nil
+    end
+
+    Rails.logger.info("Processing entry: #{entry.inspect}")
+
+    {
+      id: entry['id'],
+      form_id: entry['form_id'],
+      date_created: entry['date_created'],
+      name: mapping[:name].is_a?(Proc) ? mapping[:name].call(entry) : entry[mapping[:name]],
+      phone: entry[mapping[:phone]],
+      email: entry[mapping[:email]],
+      message: message,
+      source_url: entry['source_url'],
+      company_id: @company_id
+    }
   end
 end
 
