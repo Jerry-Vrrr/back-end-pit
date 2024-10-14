@@ -141,6 +141,12 @@ class GravityFormsService
       email: '5',
       message: '10'
     },
+    'greenberg' => {
+      name: ->(entry) { "#{entry['3']} #{entry['6']}" },
+      phone: '5',
+      email: '4',
+      message: '1'
+    },
     'cpj' => {
       name: '4',
       phone: '7',
