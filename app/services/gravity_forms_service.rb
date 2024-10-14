@@ -78,7 +78,12 @@ class GravityFormsService
       url: "#{ENV['ROZAS_URL']}/wp-json/gf/v2/entries",
       username: ENV['ROZAS_USERNAME'],
       password: ENV['ROZAS_PASSWORD']
-    }
+    },
+    'greenberg' => {
+  url: "#{ENV['GREENBERG_URL']}/wp-json/gf/v2/entries",
+  username: ENV['GREENBERG_USERNAME'],
+  password: ENV['GREENBERG_PASSWORD']
+}
   }
 
   FIELD_MAPPINGS = {
