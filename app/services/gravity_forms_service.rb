@@ -1,14 +1,13 @@
 class GravityFormsService
   COMPANY_MAPPING = {
-    "apricot" => 475663645, #login - Jerry@apricot - 
+    "apricot" => 475663645, #login - Jerry@apricot 
     "brock" => 432770919, #login - brocklawsocial@gmail.com	
-    "brown_chiari" => 754688700, #login - BrownChiariLLPlawny@gmail.com' password: ''
-    "conger" => 707808192, #login - 'CongerLawInjuryAttysCA@gmail.com' password: ''
+    "brown_chiari" => 754688700, #login - BrownChiariLLPlawny@gmail.com
+    "conger" => 707808192, #login - CongerLawInjuryAttysCA@gmail.com
     "cpj" => 196651924, #login -  ConwayPauleyJohnsonLawNE@gmail.com
     "crowell" => 408997789, #login - crowelllawofficesca@gmail.com
     "greenstein" => 788957891, #login - greensteinmilbauersocial@gmail.com	
     "greenberg" => 435195417, #login - greenberglawsocial@gmail.com'
-    "klaw" => 294642214, #login - KLGlawyerny@gmail.com
     "dkb" => 533921350, #login - dkblawyerssocial@gmail.com
     "lewis" => 316384868, #login - CLAssociatesLaw@gmail.com
     "lopez_humphries" => 612344072, #login - lhpamaster@gmail.com
