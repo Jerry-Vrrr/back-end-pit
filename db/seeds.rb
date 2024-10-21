@@ -17,7 +17,8 @@ users = [
   { email: 'mahoneymahoneylaw@gmail.com', password: 'securepassword123', role: 'client', logged_company_id: 595022144 },
   { email: 'moneyfirstlendingnv@gmail.com', password: 'securepassword123', role: 'client', logged_company_id: 258732157 },
   { email: 'rozaslawfirmllcla@gmail.com', password: 'securepassword123', role: 'client', logged_company_id: 427975086 },
-  { email: 'davidsmithlegal@gmail.com', password: 'securepassword123', role: 'client', logged_company_id: 847306783 }
+  { email: 'davidsmithlegal@gmail.com', password: 'securepassword123', role: 'client', logged_company_id: 847306783 },
+  { email: 'ggt@gmail.com', password: 'securepassword123', role: 'client', logged_company_id: 123456789 }
 ]
 
 # Create each user in the database

@@ -15,6 +15,7 @@ class GravityFormsService
     "money" => 258732157, #login - moneyfirstlendingNV@gmail.com
     "rozas" => 427975086, #login - RozasLawFirmLLCLA@gmail.com
     "trust" => 847306783 #login - davidsmithlegal@gmail.com
+    "ggt" => 123456789 #login - 
   }
 
   COMPANY_CREDENTIALS = {
@@ -145,7 +146,7 @@ class GravityFormsService
       email: '5',
       message: '10'
     },
-    'greenberg' => {
+    'ggt' => {
       name: ->(entry) { "#{entry['3']} #{entry['6']}" },
       phone: '5',
       email: '4',
