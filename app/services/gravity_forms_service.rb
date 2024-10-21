@@ -14,7 +14,7 @@ class GravityFormsService
     "mahoney" => 595022144, #login - MahoneyMahoneyLaw@gmail.com
     "money" => 258732157, #login - moneyfirstlendingNV@gmail.com
     "rozas" => 427975086, #login - RozasLawFirmLLCLA@gmail.com
-    "trust" => 847306783 #login - davidsmithlegal@gmail.com
+    "trust" => 847306783, #login - davidsmithlegal@gmail.com
     "ggt" => 123456789 #login - 
   }
 
