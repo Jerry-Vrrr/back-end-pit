@@ -82,6 +82,11 @@ class GravityFormsService
   url: "#{ENV['GREENBERG_URL']}/wp-json/gf/v2/entries",
   username: ENV['GREENBERG_USERNAME'],
   password: ENV['GREENBERG_PASSWORD']
+},
+'ggt' => {
+  url: "#{ENV['GREENBERG_URL']}/wp-json/gf/v2/entries",
+  username: ENV['GREENBERG_USERNAME'],
+  password: ENV['GREENBERG_PASSWORD']
 }
   }
 
