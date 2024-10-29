@@ -3,15 +3,23 @@ namespace :call_rail do
   task fetch_and_save_all: :environment do
     COMPANY_MAPPING.each do |company_id, company_name|
       Rails.logger.info "Processing company: #{company_name} with ID: #{company_id}"
-      service = CallRailService.new('53962143e3bd0ab2989770ecbe94a75c', company_id)
 
-      response = service.fetch_calls
-      Rails.logger.info "API Key: #{ENV['CALLRAIL_API_KEY']}, Company ID: #{company_id}"
+      # Initialize services for primary and secondary fetches
+      primary_service = CallRailService.new(ENV['CALLRAIL_API_KEY_PRIMARY'], ENV['CALLRAIL_COMPANY_ID_PRIMARY'], company_id)
+      secondary_service = CallRailService.new(ENV['CALLRAIL_API_KEY_SECONDARY'], ENV['CALLRAIL_COMPANY_ID_SECONDARY'], company_id)
 
-      if response.success?
-        Rails.logger.info "Successful response for #{company_name}: #{response.body}"
+      # Fetch data from primary and secondary sources
+      primary_response = primary_service.fetch_calls
+      secondary_response = secondary_service.fetch_calls
 
-        response.parsed_response["calls"].each do |call|
+      if primary_response.success? && secondary_response.success?
+        Rails.logger.info "Successful responses for #{company_name}"
+
+        # Aggregate calls from both responses
+        all_calls = primary_response.parsed_response["calls"] + secondary_response.parsed_response["calls"]
+
+        # Process and save each call
+        all_calls.each do |call|
           Rails.logger.info "Processing call with ID: #{call['id']} for Company ID: #{company_id}"
           call_rail_data = CallRailData.find_or_initialize_by(call_id: call["id"])
 
@@ -41,7 +49,7 @@ namespace :call_rail do
           end
         end
       else
-        Rails.logger.error "Error response for #{company_name}: #{response.message}"
+        Rails.logger.error "Error responses for #{company_name}: #{primary_response.message} / #{secondary_response.message}"
       end
     end
   end
