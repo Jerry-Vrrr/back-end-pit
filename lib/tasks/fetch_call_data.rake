@@ -5,7 +5,7 @@ namespace :call_rail do
       Rails.logger.info "Processing company: #{company_name} with ID: #{company_id}"
 
       # Initialize services for primary and secondary fetches
-      primary_service = CallRailService.new(ENV['CALLRAIL_API_KEY_PRIMARY'], ENV['CALLRAIL_COMPANY_ID_PRIMARY'], company_id)
+      primary_service = company_id == '176449112' ? GgtCallRailService.new : CallRailService.new(ENV['CALLRAIL_API_KEY_PRIMARY'], ENV['CALLRAIL_COMPANY_ID_PRIMARY'], company_id)
       secondary_service = CallRailService.new(ENV['CALLRAIL_API_KEY_SECONDARY'], ENV['CALLRAIL_COMPANY_ID_SECONDARY'], company_id)
 
       # Fetch data from primary and secondary sources
@@ -23,6 +23,7 @@ namespace :call_rail do
           Rails.logger.info "Processing call with ID: #{call['id']} for Company ID: #{company_id}"
           call_rail_data = CallRailData.find_or_initialize_by(call_id: call["id"])
 
+          # Check if the call is from GGT service and set the company ID specifically
           call_rail_data.assign_attributes(
             answered: call["answered"],
             business_phone_number: call["business_phone_number"],
@@ -39,7 +40,7 @@ namespace :call_rail do
             start_time: call["start_time"],
             tracking_phone_number: call["tracking_phone_number"],
             voicemail: call["voicemail"],
-            company_id: company_id,
+            company_id: company_id == '176449112' ? '176449112' : company_id, # Ensure GGT ID is set
           )
 
           if call_rail_data.save

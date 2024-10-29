@@ -4,8 +4,16 @@ module Api
       def index
         if params[:company_id]
           Rails.logger.info "Fetching data for Company ID: #{params[:company_id]}"
-          service = CallRailService.new('53962143e3bd0ab2989770ecbe94a75c', params[:company_id])
-          response = service.fetch_calls
+          
+          # Use GgtCallRailService if the request is for GGT
+          if params[:company_id] == '176449112'
+            service = GgtCallRailService.new
+            response = service.fetch_calls
+          else
+            # Default to CallRailService for other companies
+            service = CallRailService.new('53962143e3bd0ab2989770ecbe94a75c', params[:company_id])
+            response = service.fetch_calls
+          end
 
           if response.success?
             Rails.logger.info "Successful response for Company ID #{params[:company_id]}"
@@ -43,7 +51,7 @@ module Api
 
             calls = CallRailData.where(company_id: params[:company_id])
           else
-            Rails.logger.error "Error response from CallRailService: #{response.message}"
+            Rails.logger.error "Error response from service: #{response.message}"
             calls = CallRailData.none
           end
         else
