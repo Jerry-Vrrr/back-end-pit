@@ -43,6 +43,8 @@ module Api
             Rails.logger.error "Error response from service: #{response.message}"
             calls = CallRailData.none
           end
+          # Fetch only records with the matching company_id
+          calls = CallRailData.where(company_id: params[:company_id])
         else
           calls = CallRailData.all
         end
