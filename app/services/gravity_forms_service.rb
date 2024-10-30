@@ -7,15 +7,15 @@ class GravityFormsService
     "cpj" => 196651924, #login -  ConwayPauleyJohnsonLawNE@gmail.com
     "crowell" => 408997789, #login - crowelllawofficesca@gmail.com
     "greenstein" => 788957891, #login - greensteinmilbauersocial@gmail.com	
-    "greenberg" => 176449112, #login - greenberglawsocial@gmail.com'
+    # "greenberg" => 176449112, #login - greenberglawsocial@gmail.com'
     "dkb" => 533921350, #login - dkblawyerssocial@gmail.com
     "lewis" => 316384868, #login - CLAssociatesLaw@gmail.com
     "lopez_humphries" => 612344072, #login - lhpamaster@gmail.com
     "mahoney" => 595022144, #login - MahoneyMahoneyLaw@gmail.com
     "money" => 258732157, #login - moneyfirstlendingNV@gmail.com
     "rozas" => 427975086, #login - RozasLawFirmLLCLA@gmail.com
-    "trust" => 847306783 #login - davidsmithlegal@gmail.com
-    # "ggt" => 176449112 #login - 
+    "trust" => 847306783, #login - davidsmithlegal@gmail.com
+    "ggt" => 176449112 #login - 
   }
 
   COMPANY_CREDENTIALS = {
@@ -79,10 +79,10 @@ class GravityFormsService
       username: ENV['ROZAS_USERNAME'],
       password: ENV['ROZAS_PASSWORD']
     },
-    'greenberg' => {
-  url: "#{ENV['GREENBERG_URL']}/wp-json/gf/v2/entries",
-  username: ENV['GREENBERG_USERNAME'],
-  password: ENV['GREENBERG_PASSWORD']
+    'ggt' => {
+  url: "#{ENV['GGT_URL']}/wp-json/gf/v2/entries",
+  username: ENV['GGT_USERNAME'],
+  password: ENV['GGT_PASSWORD']
 }
 # ,
 # 'ggt' => {
