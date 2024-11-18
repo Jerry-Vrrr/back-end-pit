@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_09_02_160228) do
+ActiveRecord::Schema[7.1].define(version: 2024_11_18_180330) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -46,6 +46,21 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_02_160228) do
     t.string "email"
     t.text "message"
     t.string "source_url"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "keyword_rankings", force: :cascade do |t|
+    t.integer "company_id", null: false
+    t.string "keyword", null: false
+    t.integer "rank"
+    t.integer "base_rank"
+    t.integer "top_rank"
+    t.integer "local_monthly_searches"
+    t.integer "global_monthly_searches"
+    t.string "matched_url"
+    t.string "engine", default: "Google.com", null: false
+    t.datetime "fetched_at", precision: nil, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
