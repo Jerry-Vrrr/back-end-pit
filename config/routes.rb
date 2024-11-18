@@ -24,7 +24,10 @@ Rails.application.routes.draw do
       get 'call_rail_data/fetch_and_store', to: 'call_rail_data#fetch_and_store'
       get 'call_rail_data', to: 'call_rail_data#index'
 
+      # Keyword Rankings routes
+      resources :keyword_rankings, only: [:index]
     end
   end
+
   root to: proc { [200, { 'Content-Type' => 'text/plain' }, ['API is running']] }
 end
